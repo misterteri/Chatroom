@@ -9,12 +9,12 @@ import { useAuthState } from "react-firebase-hooks/auth"; // -> for authenticati
 import { useCollectionData } from "react-firebase-hooks/firestore"; // -> for database hook
 
 firebase.initializeApp({
-  apiKey: "AIzaSyDeDXWKTOXc4Ukl4rHS1T9WXf_T9rgwG5Q",
-  authDomain: "chatroomproject-8bdf0.firebaseapp.com",
-  projectId: "chatroomproject-8bdf0",
-  storageBucket: "chatroomproject-8bdf0.appspot.com",
-  messagingSenderId: "980247434949",
-  appId: "1:980247434949:web:742d0b8198d635bca482ac",
+  apiKey: "AIzaSyCG8dV0piBtTQs-KVU8HRfIV7o79-lbj9c",
+  authDomain: "chatroom-project-e572e.firebaseapp.com",
+  projectId: "chatroom-project-e572e",
+  storageBucket: "chatroom-project-e572e.appspot.com",
+  messagingSenderId: "698306210071",
+  appId: "1:698306210071:web:211f7f37de7ce887a2af52",
 });
 
 const auth = firebase.auth();
