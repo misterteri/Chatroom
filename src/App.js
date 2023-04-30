@@ -7,6 +7,7 @@ import "firebase/compat/firestore"; // -> for database
 
 import { useAuthState } from "react-firebase-hooks/auth"; // -> for authentication hook
 import { useCollectionData } from "react-firebase-hooks/firestore"; // -> for database hook
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 firebase.initializeApp({
   apiKey: "AIzaSyCG8dV0piBtTQs-KVU8HRfIV7o79-lbj9c",
@@ -23,37 +24,93 @@ const firestore = firebase.firestore();
 
 function App() {
   const [user] = useAuthState(auth);
+  const [isSignUp, setIsSignUp] = useState(false);
 
   return (
     <div className="App">
       <header>
-        <h1>⚛️🔥💬</h1>
-        <SignOut />
+        <h1>Chatroom</h1>
+        {user && <SignOut />}
       </header>
 
-      <section>{user ? <ChatRoom /> : <SignIn />}</section>
+      <section>
+        {user ? (
+          <ChatRoom />
+        ) : (
+          <>
+            <SignInOrSignUp isSignUp={isSignUp} setIsSignUp={setIsSignUp} />
+          </>
+        )}
+      </section>
     </div>
   );
 }
+function SignInOrSignUp({ isSignUp, setIsSignUp }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-function SignIn() {
   const signInWithGoogle = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
     auth.signInWithPopup(provider);
   };
 
+  const handleSignInOrSignUp = async (e) => {
+    e.preventDefault();
+
+    if (isSignUp) {
+      // Handle sign up
+      try {
+        await auth.createUserWithEmailAndPassword(email, password);
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      // Handle sign in
+      try {
+        await auth.signInWithEmailAndPassword(email, password);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
+  const handleSwitchForm = () => {
+    setIsSignUp(!isSignUp);
+  };
+
   return (
-    <>
+    <div>
+      <h2>{isSignUp ? "Sign Up" : "Sign In"}</h2>
+      <form onSubmit={handleSignInOrSignUp}>
+        <label>
+          Email:
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </label>
+        <label>
+          Password:
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </label>
+        <button type="submit">{isSignUp ? "Register" : "Sign In"}</button>
+      </form>
+      <button onClick={handleSwitchForm}>
+        {isSignUp
+          ? "Already have an account? Sign In"
+          : "Need to register? Sign Up"}
+      </button>
       <button className="sign-in" onClick={signInWithGoogle}>
         Sign in with Google
       </button>
-      <p>
-        Do not violate the community guidelines or you will be banned for life!
-      </p>
-    </>
+    </div>
   );
 }
-
 function SignOut() {
   return (
     auth.currentUser && (
